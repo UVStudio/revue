@@ -1,0 +1,21 @@
+service: server
+frameworkVersion: '3'
+
+plugins:
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  region: us-east-2
+  stage: prod
+  memorySize: 128
+  timeout: 5
+
+functions:
+  hello:
+    handler: api/handler.hello
+    events:
+      - httpApi:
+          path: /
+          method: get
