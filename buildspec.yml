@@ -16,4 +16,4 @@ phases:
       - sls deploy
   post_build:
     commands:
-      - echo Deployment completed on `date`
+      - echo Deployment finally completed on `date`
