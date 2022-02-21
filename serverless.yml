@@ -1,4 +1,4 @@
-service: server
+service: revue-server
 frameworkVersion: '3'
 
 plugins:
@@ -8,9 +8,44 @@ provider:
   name: aws
   runtime: nodejs14.x
   region: us-east-2
-  stage: prod
+  stage: dev
   memorySize: 128
   timeout: 5
+  environment:
+    USERS_TABLE: ${self:service}-${opt:stage, self:provider.stage}
+
+resources:
+  Resources:
+    UsersTable:
+      Type: AWS::DynamoDB::Table
+      DeletionPolicy: Retain
+      Properties:
+        TableName: ${self:provider.environment.USERS_TABLE}
+        AttributeDefinitions:
+          - AttributeName: user_email
+            AttributeType: S
+          - AttributeName: user_password
+            AttributeType: S
+          - AttributeName: timestamp
+            AttributeType: N
+        KeySchema:
+          - AttributeName: user_email
+            KeyType: HASH
+          - AttributeName: timestamp
+            KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        GlobalSecondaryIndexes:
+          - IndexName: user_password-index
+            KeySchema:
+              - AttributeName: user_password
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+            ProvisionedThroughput:
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
 
 functions:
   hello:
