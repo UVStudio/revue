@@ -41,6 +41,10 @@ resources:
         KeySchema:
           - AttributeName: user_id
             KeyType: HASH
+          - AttributeName: user_email
+            KeyType: RANGE
+          - AttributeName: user_password
+            KeyType: RANGE
           - AttributeName: timestamp
             KeyType: RANGE
         ProvisionedThroughput:
