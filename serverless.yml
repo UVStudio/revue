@@ -31,7 +31,7 @@ resources:
         TableName: ${self:provider.environment.USERS_TABLE}
         AttributeDefinitions:
           - AttributeName: user_id
-            AttributeType: N
+            AttributeType: S
           - AttributeName: user_email
             AttributeType: S
           # - AttributeName: user_password
