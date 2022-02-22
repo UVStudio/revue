@@ -36,8 +36,8 @@ resources:
             AttributeType: S
           # - AttributeName: user_password
           #   AttributeType: S
-          # - AttributeName: timestamp
-          #   AttributeType: N
+          - AttributeName: timestamp
+            AttributeType: N
         KeySchema:
           - AttributeName: user_id
             KeyType: HASH
@@ -47,9 +47,9 @@ resources:
           ReadCapacityUnits: 3
           WriteCapacityUnits: 3
         GlobalSecondaryIndexes:
-          - IndexName: user_id-index
+          - IndexName: timestamp-index
             KeySchema:
-              - AttributeName: user_id
+              - AttributeName: timestamp
                 KeyType: HASH
             Projection:
               ProjectionType: ALL
