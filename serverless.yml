@@ -4,6 +4,14 @@ frameworkVersion: '3'
 plugins:
   - serverless-offline
 
+custom:
+  allowedHeaders:
+    - Accept
+    - Content-Type
+    - Content-Length
+    - Authorization
+    - user_email
+
 provider:
   name: aws
   runtime: nodejs14.x
@@ -54,3 +62,9 @@ functions:
       - httpApi:
           path: /
           method: get
+  addUser:
+    handler: api/addUser.addUser
+    events:
+      - httpApi:
+          path: /addUser
+          method: post
