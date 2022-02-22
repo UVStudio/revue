@@ -20,7 +20,7 @@ provider:
   memorySize: 128
   timeout: 5
   environment:
-    USERS_TABLE: ${self:service}-${opt:stage, self:provider.stage}
+    USERS_TABLE: ${self:service}-v2
 
 resources:
   Resources:
