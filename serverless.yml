@@ -34,10 +34,10 @@ resources:
             AttributeType: N
           - AttributeName: user_email
             AttributeType: S
-          - AttributeName: user_password
-            AttributeType: S
-          - AttributeName: timestamp
-            AttributeType: N
+          # - AttributeName: user_password
+          #   AttributeType: S
+          # - AttributeName: timestamp
+          #   AttributeType: N
         KeySchema:
           - AttributeName: user_id
             KeyType: HASH
