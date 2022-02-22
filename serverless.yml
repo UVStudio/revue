@@ -30,6 +30,8 @@ resources:
       Properties:
         TableName: ${self:provider.environment.USERS_TABLE}
         AttributeDefinitions:
+          - AttributeName: user_id
+            AttributeType: N
           - AttributeName: user_email
             AttributeType: S
           - AttributeName: user_password
@@ -37,7 +39,7 @@ resources:
           - AttributeName: timestamp
             AttributeType: N
         KeySchema:
-          - AttributeName: user_email
+          - AttributeName: user_id
             KeyType: HASH
           - AttributeName: timestamp
             KeyType: RANGE
@@ -45,9 +47,9 @@ resources:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
         GlobalSecondaryIndexes:
-          - IndexName: user_password-index
+          - IndexName: user_id-index
             KeySchema:
-              - AttributeName: user_password
+              - AttributeName: user_id
                 KeyType: HASH
             Projection:
               ProjectionType: ALL
@@ -68,3 +70,9 @@ functions:
       - httpApi:
           path: /addUser
           method: post
+  getUser:
+    handler: api/getUser.getUser
+    events:
+      - httpApi:
+          path: /getUser/{user_id}
+          method: get
