@@ -48,8 +48,8 @@ resources:
           - AttributeName: timestamp
             KeyType: RANGE
         ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
+          ReadCapacityUnits: 3
+          WriteCapacityUnits: 3
         GlobalSecondaryIndexes:
           - IndexName: user_id-index
             KeySchema:
@@ -58,8 +58,8 @@ resources:
             Projection:
               ProjectionType: ALL
             ProvisionedThroughput:
-              ReadCapacityUnits: 1
-              WriteCapacityUnits: 1
+              ReadCapacityUnits: 3
+              WriteCapacityUnits: 3
 
 functions:
   hello:
