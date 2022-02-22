@@ -3,7 +3,7 @@
  */
 const AWS = require('aws-sdk');
 AWS.config.update({ region: 'us-east-2' });
-const timestamp = Date.now();
+//const timestamp = Date.now();
 
 const dynamoDB = new AWS.DynamoDB.DocumentClient();
 const tableName = process.env.USERS_TABLE;
