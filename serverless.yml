@@ -49,6 +49,10 @@ resources:
             KeySchema:
               - AttributeName: user_id
                 KeyType: HASH
+          - IndexName: timestamp-index
+            KeySchema:
+              - AttributeName: timestamp
+                KeyType: RANGE
             Projection:
               ProjectionType: ALL
             ProvisionedThroughput:
