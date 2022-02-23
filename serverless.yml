@@ -34,6 +34,8 @@ resources:
             AttributeType: S
           - AttributeName: user_email
             AttributeType: S
+          # - AttributeName: user_password
+          #   AttributeType: S
           - AttributeName: timestamp
             AttributeType: N
         KeySchema:
@@ -49,10 +51,6 @@ resources:
             KeySchema:
               - AttributeName: user_id
                 KeyType: HASH
-          - IndexName: timestamp-index
-            KeySchema:
-              - AttributeName: timestamp
-                KeyType: RANGE
             Projection:
               ProjectionType: ALL
             ProvisionedThroughput:
