@@ -3,7 +3,6 @@
  */
 const AWS = require('aws-sdk');
 AWS.config.update({ region: 'us-east-2' });
-//const timestamp = Date.now();
 
 const dynamoDB = new AWS.DynamoDB.DocumentClient();
 const tableName = process.env.USERS_TABLE;
@@ -26,7 +25,7 @@ module.exports.getUser = async (event, context) => {
     return {
       statusCode: 200,
       body: JSON.stringify({
-        message: 'Go Serverless v3.0! Your function executed successfully!',
+        message: `User ID ${userId}`,
         data,
       }),
     };

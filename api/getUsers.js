@@ -1,36 +1,25 @@
 /**
- * Route: POST /addUser
+ * Route: GET /getUsers
  */
-const { v4: uuidv4 } = require('uuid');
 const AWS = require('aws-sdk');
 AWS.config.update({ region: 'us-east-2' });
-const timestamp = Date.now();
 
 const dynamoDB = new AWS.DynamoDB.DocumentClient();
 const tableName = process.env.USERS_TABLE;
 
-module.exports.addUser = async (event, context) => {
+module.exports.getUsers = async (event, context) => {
   try {
-    const item = JSON.parse(event.body).item;
-    const headers = event.headers;
-    item.user_email = headers.user_email;
-    item.user_id = uuidv4();
-    item.timestamp = timestamp;
+    const params = {
+      TableName: tableName,
+    };
 
-    await dynamoDB
-      .put({
-        TableName: tableName,
-        Item: item,
-      })
-      .promise();
+    const data = await dynamoDB.scan(params).promise();
 
     return {
       statusCode: 200,
       body: JSON.stringify({
-        message: 'Add new user to revue-server-v3',
-        headers,
-        item,
-        event,
+        message: 'All users from revue-server-v3',
+        data,
       }),
     };
   } catch (err) {

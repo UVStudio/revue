@@ -76,3 +76,15 @@ functions:
       - httpApi:
           path: /getUser/{user_id}
           method: get
+  getUsers:
+    handler: api/getUsers.getUsers
+    events:
+      - httpApi:
+          path: /getUsers/
+          method: get
+  deleteUser:
+    handler: api/deleteUser.deleteUser
+    events:
+      - httpApi:
+          path: /deleteUser/{user_id}
+          method: delete

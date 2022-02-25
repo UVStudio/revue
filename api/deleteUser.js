@@ -1,36 +1,32 @@
 /**
- * Route: POST /addUser
+ * Route: DELETE /deleteUser
  */
 const { v4: uuidv4 } = require('uuid');
 const AWS = require('aws-sdk');
 AWS.config.update({ region: 'us-east-2' });
-const timestamp = Date.now();
 
 const dynamoDB = new AWS.DynamoDB.DocumentClient();
 const tableName = process.env.USERS_TABLE;
 
-module.exports.addUser = async (event, context) => {
+module.exports.deleteUser = async (event, context) => {
   try {
-    const item = JSON.parse(event.body).item;
-    const headers = event.headers;
-    item.user_email = headers.user_email;
-    item.user_id = uuidv4();
-    item.timestamp = timestamp;
+    const userId = decodeURIComponent(event.pathParameters.user_id);
+    const data = JSON.parse(event.body);
+    const params = {
+      TableName: tableName,
+      Key: {
+        user_id: userId,
+        user_email: data.email,
+      },
+      Limit: 1,
+    };
 
-    await dynamoDB
-      .put({
-        TableName: tableName,
-        Item: item,
-      })
-      .promise();
+    await dynamoDB.delete(params).promise();
 
     return {
       statusCode: 200,
       body: JSON.stringify({
-        message: 'Add new user to revue-server-v3',
-        headers,
-        item,
-        event,
+        message: `${userId} deleted`,
       }),
     };
   } catch (err) {
