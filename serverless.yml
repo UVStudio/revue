@@ -23,7 +23,7 @@ provider:
   environment:
     # JWT_SECRET: ${self:custom.secrets.JWT_SECRET}
     # AWS_ID: ${self:custom.secrets.AWS_ID}
-    USERS_TABLE: ${self:service}-v3
+    USERS_TABLE: ${self:service}-v4
 
 resources:
   Resources:
