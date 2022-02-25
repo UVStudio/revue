@@ -5,6 +5,7 @@ plugins:
   - serverless-offline
 
 custom:
+  # secrets: ${file(secrets.json)}
   allowedHeaders:
     - Accept
     - Content-Type
@@ -20,6 +21,8 @@ provider:
   memorySize: 128
   timeout: 5
   environment:
+    # JWT_SECRET: ${self:custom.secrets.JWT_SECRET}
+    # AWS_ID: ${self:custom.secrets.AWS_ID}
     USERS_TABLE: ${self:service}-v3
 
 resources:
@@ -34,14 +37,12 @@ resources:
             AttributeType: S
           - AttributeName: user_email
             AttributeType: S
-          # - AttributeName: user_password
-          #   AttributeType: S
           - AttributeName: timestamp
             AttributeType: N
         KeySchema:
-          - AttributeName: user_id
-            KeyType: HASH
           - AttributeName: user_email
+            KeyType: HASH
+          - AttributeName: timestamp
             KeyType: RANGE
         ProvisionedThroughput:
           ReadCapacityUnits: 3
@@ -64,24 +65,62 @@ functions:
       - httpApi:
           path: /
           method: get
+  verify-token:
+    handler: api/authorize.authorize
+
+  # me:
+  #   handler: api/me.me
+  #   events:
+  #     - httpApi:
+  #         path: /me
+  #         method: get
+  #         authorizer:
+  #           name: verify-token
+  #           identity-source: method.request.header.Authorization
+  #           resultTtlInSeconds: 3600
+
+  login:
+    handler: api/login.login
+    events:
+      - httpApi:
+          path: /login
+          method: post
+
+  registerUser:
+    handler: api/registerUser.registerUser
+    events:
+      - httpApi:
+          path: /registerUser
+          method: post
+
+  getUserByEmail:
+    handler: api/getUserByEmail.getUserByEmail
+    events:
+      - httpApi:
+          path: /getUserByEmail
+          method: get
+
   addUser:
     handler: api/addUser.addUser
     events:
       - httpApi:
           path: /addUser
           method: post
+
   getUser:
     handler: api/getUser.getUser
     events:
       - httpApi:
           path: /getUser/{user_id}
           method: get
+
   getUsers:
     handler: api/getUsers.getUsers
     events:
       - httpApi:
           path: /getUsers/
           method: get
+
   deleteUser:
     handler: api/deleteUser.deleteUser
     events:
