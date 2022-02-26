@@ -118,7 +118,7 @@ functions:
     handler: api/getUsers.getUsers
     events:
       - httpApi:
-          path: /getUsers/
+          path: /getUsers
           method: get
 
   deleteUser:
