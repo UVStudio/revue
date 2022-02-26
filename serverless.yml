@@ -23,7 +23,7 @@ provider:
   environment:
     # JWT_SECRET: ${self:custom.secrets.JWT_SECRET}
     # AWS_ID: ${self:custom.secrets.AWS_ID}
-    USERS_TABLE: ${self:service}-v4
+    USERS_TABLE: ${self:service}-v5
 
 resources:
   Resources:
@@ -33,14 +33,14 @@ resources:
       Properties:
         TableName: ${self:provider.environment.USERS_TABLE}
         AttributeDefinitions:
-          - AttributeName: user_id
+          - AttributeName: userId
             AttributeType: S
-          - AttributeName: user_email
+          - AttributeName: userEmail
             AttributeType: S
           - AttributeName: timestamp
             AttributeType: N
         KeySchema:
-          - AttributeName: user_email
+          - AttributeName: userEmail
             KeyType: HASH
           - AttributeName: timestamp
             KeyType: RANGE
@@ -48,9 +48,9 @@ resources:
           ReadCapacityUnits: 3
           WriteCapacityUnits: 3
         GlobalSecondaryIndexes:
-          - IndexName: user_id-index
+          - IndexName: userId-index
             KeySchema:
-              - AttributeName: user_id
+              - AttributeName: userId
                 KeyType: HASH
             Projection:
               ProjectionType: ALL
@@ -100,18 +100,11 @@ functions:
           path: /getUserByEmail
           method: get
 
-  addUser:
-    handler: api/addUser.addUser
-    events:
-      - httpApi:
-          path: /addUser
-          method: post
-
   getUser:
     handler: api/getUser.getUser
     events:
       - httpApi:
-          path: /getUser/{user_id}
+          path: /getUser/{userId}
           method: get
 
   getUsers:
@@ -125,5 +118,5 @@ functions:
     handler: api/deleteUser.deleteUser
     events:
       - httpApi:
-          path: /deleteUser/{user_id}
+          path: /deleteUser/{userId}
           method: delete

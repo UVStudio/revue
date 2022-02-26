@@ -12,30 +12,25 @@ const tableName = process.env.USERS_TABLE;
 
 module.exports.registerUser = async (event, context) => {
   try {
-    const item = JSON.parse(event.body).item;
-    const headers = event.headers;
-    const password = item.user_password;
-    item.user_email = headers.user_email;
-    item.user_id = uuidv4();
-    item.timestamp = timestamp;
+    const body = JSON.parse(event.body);
+    body.userId = uuidv4();
+    body.timestamp = timestamp;
 
-    const passwordHash = await bcrypt.hash(password, 8);
-
-    item.user_password = passwordHash;
+    const passwordHash = await bcrypt.hash(body.password, 8);
 
     await dynamoDB
       .put({
         TableName: tableName,
-        Item: item,
+        Item: body,
       })
       .promise();
 
     return {
       statusCode: 200,
       body: JSON.stringify({
-        message: 'Add new user to revue-server-v3',
-        headers,
-        item,
+        message: `Added ${body.name} to ${process.env.USERS_TABLE}`,
+        body,
+        passwordHash,
       }),
     };
   } catch (err) {
