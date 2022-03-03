@@ -93,12 +93,12 @@ functions:
           path: /registerUser
           method: post
 
-  getUserByEmail:
-    handler: api/getUserByEmail.getUserByEmail
-    events:
-      - httpApi:
-          path: /getUserByEmail
-          method: get
+  # getUserByEmail:
+  #   handler: api/getUserByEmail.getUserByEmail
+  #   events:
+  #     - httpApi:
+  #         path: /getUserByEmail
+  #         method: get
 
   getUser:
     handler: api/getUser.getUser

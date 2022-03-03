@@ -10,13 +10,13 @@ const tableName = process.env.USERS_TABLE;
 
 module.exports.deleteUser = async (event, context) => {
   try {
-    const userId = decodeURIComponent(event.pathParameters.user_id);
+    const userId = decodeURIComponent(event.pathParameters.userId);
     const data = JSON.parse(event.body);
     const params = {
       TableName: tableName,
       Key: {
-        user_id: userId,
-        user_email: data.email,
+        userEmail: data.email,
+        timestamp: data.timestamp,
       },
       Limit: 1,
     };
@@ -27,6 +27,7 @@ module.exports.deleteUser = async (event, context) => {
       statusCode: 200,
       body: JSON.stringify({
         message: `${userId} deleted`,
+        params,
       }),
     };
   } catch (err) {

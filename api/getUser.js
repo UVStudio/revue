@@ -9,11 +9,11 @@ const tableName = process.env.USERS_TABLE;
 
 module.exports.getUser = async (event, context) => {
   try {
-    const userId = decodeURIComponent(event.pathParameters.user_id);
+    const userId = decodeURIComponent(event.pathParameters.userId);
     const params = {
       TableName: tableName,
-      IndexName: 'user_id-index',
-      KeyConditionExpression: 'user_id = :user_id',
+      IndexName: 'userId-index',
+      KeyConditionExpression: 'userId = :user_id',
       ExpressionAttributeValues: {
         ':user_id': userId,
       },
@@ -26,7 +26,7 @@ module.exports.getUser = async (event, context) => {
       statusCode: 200,
       body: JSON.stringify({
         message: `User ID ${userId}`,
-        data,
+        user: data.Items[0],
       }),
     };
   } catch (err) {

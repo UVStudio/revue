@@ -9,16 +9,15 @@ const tableName = process.env.USERS_TABLE;
 
 module.exports.getUserByEmail = async (event, context) => {
   try {
-    //const item = JSON.parse(event.body).item;
-    //const email = item.user_email;
-    const headers = event.headers;
-    const email = headers.user_email;
+    const userId = decodeURIComponent(event.pathParameters.userId);
+    //const data = JSON.parse(event.body);
+    //const email = data.userEmail;
     const params = {
       TableName: tableName,
-      //IndexName: 'user_email-index',
-      KeyConditionExpression: 'user_email = :user_email',
+      IndexName: 'userId-index',
+      KeyConditionExpression: 'userId = :user_id',
       ExpressionAttributeValues: {
-        ':user_email': email,
+        ':user_id': userId,
       },
       Limit: 1,
     };
@@ -30,6 +29,7 @@ module.exports.getUserByEmail = async (event, context) => {
       body: JSON.stringify({
         message: `User: ${email}`,
         email,
+        data,
       }),
     };
   } catch (err) {

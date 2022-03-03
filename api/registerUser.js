@@ -18,6 +18,8 @@ module.exports.registerUser = async (event, context) => {
 
     const passwordHash = await bcrypt.hash(body.password, 8);
 
+    body.password = passwordHash;
+
     await dynamoDB
       .put({
         TableName: tableName,
