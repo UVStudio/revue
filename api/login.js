@@ -1,25 +1,19 @@
 /**
- * Route: POST /registerUser
+ * Route: POST /login
  */
-const { v4: uuidv4 } = require('uuid');
 const AWS = require('aws-sdk');
 AWS.config.update({ region: 'us-east-2' });
 const bcrypt = require('bcryptjs');
-const timestamp = Date.now();
+const jwt = require('jsonwebtoken');
+const secrets = require('../secrets.json');
+const privateKey = secrets.JWT_SECRET;
 
 const dynamoDB = new AWS.DynamoDB.DocumentClient();
 const tableName = process.env.USERS_TABLE;
 
-module.exports.registerUser = async (event, context) => {
+module.exports.login = async (event, context) => {
   try {
     const body = JSON.parse(event.body);
-    body.userId = uuidv4();
-    body.timestamp = timestamp;
-
-    const passwordHash = await bcrypt.hash(body.password, 8);
-
-    body.password = passwordHash;
-
     const userEmail = body.userEmail;
 
     const params = {
@@ -31,30 +25,44 @@ module.exports.registerUser = async (event, context) => {
       Limit: 1,
     };
 
-    const user = await dynamoDB.query(params).promise();
+    const data = await dynamoDB.query(params).promise();
 
-    if (user.Count > 0) {
+    if (data.Count === 0) {
       return {
         statusCode: 400,
         body: JSON.stringify({
-          message: `Email ${body.userEmail} is already registered on our system.`,
+          message: 'User not found',
         }),
       };
     }
 
-    await dynamoDB
-      .put({
-        TableName: tableName,
-        Item: body,
-      })
-      .promise();
+    const user = data.Items[0];
+
+    const match = await bcrypt.compare(body.password, user.password);
+
+    if (!match) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({
+          message: 'Password incorrect',
+        }),
+      };
+    }
+
+    const token = jwt.sign(
+      { exp: Math.floor(Date.now() / 1000) + 60 * 60 },
+      privateKey,
+      {
+        algorithm: 'HS256',
+      }
+    );
+    console.log('token: ', token);
 
     return {
       statusCode: 200,
       body: JSON.stringify({
-        message: `Added ${body.name} to ${process.env.USERS_TABLE}`,
+        user: data.Items[0],
         body,
-        passwordHash,
       }),
     };
   } catch (err) {
