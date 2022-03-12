@@ -50,19 +50,19 @@ module.exports.login = async (event, context) => {
     }
 
     const token = jwt.sign(
-      { exp: Math.floor(Date.now() / 1000) + 60 * 60 },
+      { exp: Math.floor(Date.now() / 1000) + 60 * 3600, userId: user.userId },
       privateKey,
       {
         algorithm: 'HS256',
       }
     );
-    console.log('token: ', token);
 
     return {
       statusCode: 200,
       body: JSON.stringify({
         user: data.Items[0],
         body,
+        token,
       }),
     };
   } catch (err) {

@@ -6,6 +6,9 @@ plugins:
 
 custom:
   # secrets: ${file(secrets.json)}
+  serverless-offline:
+    ignoreJWTSignature: true
+
   allowedHeaders:
     - Accept
     - Content-Type
@@ -24,6 +27,13 @@ provider:
     # JWT_SECRET: ${self:custom.secrets.JWT_SECRET}
     # AWS_ID: ${self:custom.secrets.AWS_ID}
     USERS_TABLE: ${self:service}-v5
+  httpApi:
+    authorizers:
+      verifyToken:
+        type: request
+        functionName: verifyToken
+        resultTtlInSeconds: 300
+        identitySource: method.request.header.Authorization
 
 resources:
   Resources:
@@ -65,19 +75,29 @@ functions:
       - httpApi:
           path: /
           method: get
-  verify-token:
-    handler: api/authorize.authorize
 
-  # me:
-  #   handler: api/me.me
-  #   events:
-  #     - httpApi:
-  #         path: /me
-  #         method: get
-  #         authorizer:
-  #           name: verify-token
-  #           identity-source: method.request.header.Authorization
-  #           resultTtlInSeconds: 3600
+  verifyToken:
+    handler: utils/authorize.authorize
+
+  me:
+    handler: api/me.me
+    events:
+      - httpApi:
+          path: /me
+          method: get
+          authorizer:
+            name: verifyToken
+            type: request
+
+  createUploadURL:
+    handler: api/createUploadURL.createUploadURL
+    events:
+      - httpApi:
+          path: /createUploadURL
+          method: post
+          authorizer:
+            name: verifyToken
+            type: request
 
   login:
     handler: api/login.login
@@ -92,13 +112,6 @@ functions:
       - httpApi:
           path: /registerUser
           method: post
-
-  # getUserByEmail:
-  #   handler: api/getUserByEmail.getUserByEmail
-  #   events:
-  #     - httpApi:
-  #         path: /getUserByEmail
-  #         method: get
 
   getUser:
     handler: api/getUser.getUser
@@ -120,3 +133,10 @@ functions:
       - httpApi:
           path: /deleteUser/{userId}
           method: delete
+
+  # getUserByEmail:
+  #   handler: api/getUserByEmail.getUserByEmail
+  #   events:
+  #     - httpApi:
+  #         path: /getUserByEmail
+  #         method: get

@@ -4,7 +4,10 @@
 const { v4: uuidv4 } = require('uuid');
 const AWS = require('aws-sdk');
 AWS.config.update({ region: 'us-east-2' });
+const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const secrets = require('../secrets.json');
+const privateKey = secrets.JWT_SECRET;
 const timestamp = Date.now();
 
 const dynamoDB = new AWS.DynamoDB.DocumentClient();
@@ -49,12 +52,21 @@ module.exports.registerUser = async (event, context) => {
       })
       .promise();
 
+    const token = jwt.sign(
+      { exp: Math.floor(Date.now() / 1000) + 60 * 60 },
+      privateKey,
+      {
+        algorithm: 'HS256',
+      }
+    );
+
     return {
       statusCode: 200,
       body: JSON.stringify({
         message: `Added ${body.name} to ${process.env.USERS_TABLE}`,
         body,
         passwordHash,
+        token,
       }),
     };
   } catch (err) {
