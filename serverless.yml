@@ -33,7 +33,7 @@ provider:
         type: request
         functionName: verifyToken
         resultTtlInSeconds: 300
-        identitySource: method.request.header.Authorization
+        identitySource: $request.header.Authorization
 
 resources:
   Resources:
