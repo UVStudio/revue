@@ -15,7 +15,6 @@ module.exports.createUploadURL = async (event, context) => {
       statusCode: 200,
       body: JSON.stringify({
         message: `createUploadURL`,
-        event,
       }),
     };
   } catch (err) {

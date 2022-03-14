@@ -49,6 +49,8 @@ resources:
             AttributeType: S
           - AttributeName: timestamp
             AttributeType: N
+          - AttributeName: userType
+            AttributeType: N
         KeySchema:
           - AttributeName: userEmail
             KeyType: HASH
@@ -93,8 +95,18 @@ functions:
     handler: api/createUploadURL.createUploadURL
     events:
       - httpApi:
-          path: /createUploadURL
+          path: /me/createUploadURL
           method: post
+          authorizer:
+            name: verifyToken
+            type: request
+
+  updateUser:
+    handler: api/updateUser.updateUser
+    events:
+      - httpApi:
+          path: /me/updateUser
+          method: put
           authorizer:
             name: verifyToken
             type: request

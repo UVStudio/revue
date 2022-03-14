@@ -53,7 +53,7 @@ module.exports.registerUser = async (event, context) => {
       .promise();
 
     const token = jwt.sign(
-      { exp: Math.floor(Date.now() / 1000) + 60 * 60 },
+      { exp: Math.floor(Date.now() / 1000) + 60 * 3600 },
       privateKey,
       {
         algorithm: 'HS256',

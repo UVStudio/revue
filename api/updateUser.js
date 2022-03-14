@@ -1,5 +1,5 @@
 /**
- * Route: GET /me
+ * Route: Put /updateUser
  */
 const AWS = require('aws-sdk');
 AWS.config.update({ region: 'us-east-2' });
@@ -7,11 +7,11 @@ AWS.config.update({ region: 'us-east-2' });
 const dynamoDB = new AWS.DynamoDB.DocumentClient();
 const tableName = process.env.USERS_TABLE;
 
-module.exports.me = async (event, context) => {
+module.exports.updateUser = async (event, context) => {
   try {
-    // console.log('me event: ', event);
-    // console.log('me context: ', context);
     const userId = event.requestContext.authorizer.jwt.claims.userId;
+
+    console.log('userId: ', userId);
 
     const params = {
       TableName: tableName,
@@ -25,11 +25,29 @@ module.exports.me = async (event, context) => {
 
     const data = await dynamoDB.query(params).promise();
 
+    if (data.Count === 0) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({
+          message: `${userId} does not exist on the system.`,
+        }),
+      };
+    }
+
+    const body = JSON.parse(event.body);
+
+    // await dynamoDB
+    //   .put({
+    //     TableName: tableName,
+    //     Item: body,
+    //   })
+    //   .promise();
+
     return {
       statusCode: 200,
       body: JSON.stringify({
-        userId,
-        user: data.Items[0],
+        message: `User id: ${userId} is being updated.`,
+        user: body,
       }),
     };
   } catch (err) {

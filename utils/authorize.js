@@ -7,16 +7,13 @@ const jwt = require('jsonwebtoken');
 const secrets = require('../secrets.json');
 const privateKey = secrets.JWT_SECRET;
 
-const dynamoDB = new AWS.DynamoDB.DocumentClient();
-const tableName = process.env.USERS_TABLE;
-
 module.exports.authorize = async (event, context) => {
   const token = event.headers.Authorization;
 
-  console.log('event: ', event);
-
   const decoded = jwt.verify(token, privateKey);
   const userId = decoded.userId;
+
+  //console.log('auth event: ', event);
 
   try {
     return {
@@ -29,7 +26,8 @@ module.exports.authorize = async (event, context) => {
             Effect: 'Allow',
             Resource: [
               'arn:aws:execute-api:us-east-2:random-account-id:random-api-id/dev/GET/me',
-              'arn:aws:execute-api:us-east-2:random-account-id:random-api-id/dev/POST/createUploadURL',
+              'arn:aws:execute-api:us-east-2:random-account-id:random-api-id/dev/PUT/me/updateUser',
+              'arn:aws:execute-api:us-east-2:random-account-id:random-api-id/dev/POST/me/createUploadURL',
             ],
           },
         ],
@@ -37,7 +35,7 @@ module.exports.authorize = async (event, context) => {
       context: {
         org: 'revue',
         role: 'user',
-        createdAt: Date.now(),
+        user: userId,
       },
     };
   } catch (err) {
