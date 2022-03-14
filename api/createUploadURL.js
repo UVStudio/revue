@@ -2,19 +2,44 @@
  * Route: POST /createUploadURL
  */
 const AWS = require('aws-sdk');
-AWS.config.update({ region: 'us-east-2' });
+const secrets = require('../secrets.json');
+AWS.config.update({ region: secrets.REGION });
+const { v4: uuidv4 } = require('uuid');
 
-const dynamoDB = new AWS.DynamoDB.DocumentClient();
-const tableName = process.env.USERS_TABLE;
+const {
+  S3Client,
+  CreateBucketCommand,
+  DeleteObjectCommand,
+  PutObjectCommand,
+} = require('@aws-sdk/client-s3');
+const s3Client = new S3Client({ region: secrets.REGION });
 
 module.exports.createUploadURL = async (event, context) => {
+  const bucketParams = {
+    Bucket: `revue-${uuidv4()}`,
+    Key: `${secrets.S3_SECRET}`,
+    Body: 'BODY',
+  };
+
   try {
     console.log('createUploadURL');
+
+    try {
+      // Create an S3 bucket.
+      console.log(`Creating bucket ${bucketParams.Bucket}`);
+      await s3Client.send(
+        new CreateBucketCommand({ Bucket: bucketParams.Bucket })
+      );
+      console.log(`Waiting for "${bucketParams.Bucket}" bucket creation...`);
+    } catch (err) {
+      console.log('Error creating bucket', err);
+    }
 
     return {
       statusCode: 200,
       body: JSON.stringify({
         message: `createUploadURL`,
+        bucketParams,
       }),
     };
   } catch (err) {

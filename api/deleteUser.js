@@ -1,17 +1,20 @@
 /**
  * Route: DELETE /deleteUser
  */
-const { v4: uuidv4 } = require('uuid');
 const AWS = require('aws-sdk');
-AWS.config.update({ region: 'us-east-2' });
+const secrets = require('../secrets.json');
+AWS.config.update({ region: secrets.REGION });
 
 const dynamoDB = new AWS.DynamoDB.DocumentClient();
 const tableName = process.env.USERS_TABLE;
+
+const { deleteBucket } = require('../utils/deleteBucket');
 
 module.exports.deleteUser = async (event, context) => {
   try {
     const userId = decodeURIComponent(event.pathParameters.userId);
     const data = JSON.parse(event.body);
+
     const params = {
       TableName: tableName,
       Key: {
@@ -22,11 +25,12 @@ module.exports.deleteUser = async (event, context) => {
     };
 
     await dynamoDB.delete(params).promise();
+    await deleteBucket(data.name, userId);
 
     return {
       statusCode: 200,
       body: JSON.stringify({
-        message: `${userId} deleted`,
+        message: `${data.email} deleted`,
         params,
       }),
     };

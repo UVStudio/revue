@@ -2,7 +2,8 @@
  * Route: Put /updateUser
  */
 const AWS = require('aws-sdk');
-AWS.config.update({ region: 'us-east-2' });
+const secrets = require('../secrets.json');
+AWS.config.update({ region: secrets.REGION });
 
 const dynamoDB = new AWS.DynamoDB.DocumentClient();
 const tableName = process.env.USERS_TABLE;
@@ -10,8 +11,6 @@ const tableName = process.env.USERS_TABLE;
 module.exports.updateUser = async (event, context) => {
   try {
     const userId = event.requestContext.authorizer.jwt.claims.userId;
-
-    console.log('userId: ', userId);
 
     const params = {
       TableName: tableName,

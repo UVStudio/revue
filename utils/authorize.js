@@ -1,11 +1,11 @@
 /**
- * Route:
+ * Helper function
  */
 const AWS = require('aws-sdk');
-AWS.config.update({ region: 'us-east-2' });
 const jwt = require('jsonwebtoken');
 const secrets = require('../secrets.json');
 const privateKey = secrets.JWT_SECRET;
+AWS.config.update({ region: secrets.REGION });
 
 module.exports.authorize = async (event, context) => {
   const token = event.headers.Authorization;

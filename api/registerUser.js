@@ -3,12 +3,13 @@
  */
 const { v4: uuidv4 } = require('uuid');
 const AWS = require('aws-sdk');
-AWS.config.update({ region: 'us-east-2' });
+const secrets = require('../secrets.json');
+AWS.config.update({ region: secrets.REGION });
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const secrets = require('../secrets.json');
 const privateKey = secrets.JWT_SECRET;
 const timestamp = Date.now();
+const { createBucket } = require('../utils/createBucket');
 
 const dynamoDB = new AWS.DynamoDB.DocumentClient();
 const tableName = process.env.USERS_TABLE;
@@ -59,6 +60,8 @@ module.exports.registerUser = async (event, context) => {
         algorithm: 'HS256',
       }
     );
+
+    await createBucket(body.name, body.userId);
 
     return {
       statusCode: 200,
