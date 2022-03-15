@@ -32,14 +32,16 @@ module.exports.uploadObj = async (event, context) => {
   const user = data.Items[0];
   const userName = user.name;
 
-  //const file = '/Users/leonardshen_1/Desktop/castle.jpg';
-  const file = '../../../castle.jpg';
+  const file = '../../../video.mp4';
   const fileStream = fs.createReadStream(file);
+  // const formData = new FormData();
+  // formData.append('file', )
 
   const bucketParams = {
     Bucket: `revue-${userName.toLowerCase()}-${userId}`,
     Key: path.basename(file),
     Body: fileStream,
+    ACL: 'public-read',
   };
 
   try {
@@ -49,20 +51,21 @@ module.exports.uploadObj = async (event, context) => {
     const command = new PutObjectCommand(bucketParams);
     // Create the presigned URL.
     const signedUrl = await getSignedUrl(s3Client, command, {
-      expiresIn: 3600,
+      expiresIn: 36000,
     });
-    console.log(
-      `Putting "${bucketParams.Key}" using signedUrl with body "${bucketParams.Body}" in v3`
-    );
-    console.log(signedUrl);
-    const data = await s3Client.send(new PutObjectCommand(bucketParams));
-    console.log('Success', data);
+    // console.log(
+    //   `Putting "${bucketParams.Key}" using signedUrl with body "${bucketParams.Body}" in v3`
+    // );
+    // console.log(signedUrl);
+    // const data = await s3Client.send(new PutObjectCommand(bucketParams)); -- this needs to be a FE function
+
+    console.log('Success - signedUrl: ', signedUrl);
 
     return {
       statusCode: 200,
       body: JSON.stringify({
         message: `uploadObj success`,
-        event,
+        signedUrl,
       }),
     };
   } catch (err) {
