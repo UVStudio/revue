@@ -1,5 +1,5 @@
 /**
- * Route: POST /uploadObj
+ * Route: POST /presignedUrl
  */
 const AWS = require('aws-sdk');
 const secrets = require('../secrets.json');
@@ -15,8 +15,11 @@ const s3Client = new S3Client({ region: secrets.REGION });
 const dynamoDB = new AWS.DynamoDB.DocumentClient();
 const tableName = process.env.USERS_TABLE;
 
-module.exports.uploadObj = async (event, context) => {
+module.exports.presignedUrl = async (event, context) => {
   const userId = event.requestContext.authorizer.jwt.claims.userId;
+  const body = JSON.parse(event.body);
+  const fileNames = body.fileNames; //Array
+  const signedUrlArray = [];
 
   const params = {
     TableName: tableName,
@@ -28,44 +31,37 @@ module.exports.uploadObj = async (event, context) => {
     Limit: 1,
   };
 
+  //User authentication
   const data = await dynamoDB.query(params).promise();
   const user = data.Items[0];
   const userName = user.name;
 
-  const file = '../../../video.mp4';
-  const fileStream = fs.createReadStream(file);
-  // const formData = new FormData();
-  // formData.append('file', )
-
-  const bucketParams = {
-    Bucket: `revue-${userName.toLowerCase()}-${userId}`,
-    Key: path.basename(file),
-    Body: fileStream,
-    ACL: 'public-read',
-  };
-
   try {
-    console.log('uploadObj');
+    for (let i = 0; i < fileNames.length; i++) {
+      const bucketParams = {
+        Bucket: `revue-${userName.toLowerCase()}-${userId}`,
+        Key: `${userName}/${fileNames[i]}`,
+        ACL: 'public-read',
+      };
 
-    // Create a command to put the object in the S3 bucket.
-    const command = new PutObjectCommand(bucketParams);
-    // Create the presigned URL.
-    const signedUrl = await getSignedUrl(s3Client, command, {
-      expiresIn: 36000,
-    });
-    // console.log(
-    //   `Putting "${bucketParams.Key}" using signedUrl with body "${bucketParams.Body}" in v3`
-    // );
-    // console.log(signedUrl);
-    // const data = await s3Client.send(new PutObjectCommand(bucketParams)); -- this needs to be a FE function
+      // Create a command to put the object in the S3 bucket.
+      const command = new PutObjectCommand(bucketParams);
 
-    console.log('Success - signedUrl: ', signedUrl);
+      const signedUrl = await getSignedUrl(s3Client, command, {
+        expiresIn: 360000,
+      });
+
+      signedUrlArray.push({
+        fileName: fileNames[i],
+        signedUrl,
+      });
+    }
 
     return {
       statusCode: 200,
       body: JSON.stringify({
-        message: `uploadObj success`,
-        signedUrl,
+        message: `presignedUrl generated`,
+        signedUrlArray,
       }),
     };
   } catch (err) {

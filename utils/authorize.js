@@ -27,7 +27,7 @@ module.exports.authorize = async (event, context) => {
             Resource: [
               'arn:aws:execute-api:us-east-2:random-account-id:random-api-id/dev/GET/me',
               'arn:aws:execute-api:us-east-2:random-account-id:random-api-id/dev/PUT/me/updateUser',
-              'arn:aws:execute-api:us-east-2:random-account-id:random-api-id/dev/POST/me/uploadObj',
+              'arn:aws:execute-api:us-east-2:random-account-id:random-api-id/dev/POST/me/presignedUrl',
             ],
           },
         ],

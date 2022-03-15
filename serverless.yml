@@ -91,11 +91,11 @@ functions:
             name: verifyToken
             type: request
 
-  uploadObj:
-    handler: api/uploadObj.uploadObj
+  presignedUrl:
+    handler: api/presignedUrl.presignedUrl
     events:
       - httpApi:
-          path: /me/uploadObj
+          path: /me/presignedUrl
           method: post
           authorizer:
             name: verifyToken
