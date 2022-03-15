@@ -13,7 +13,7 @@ module.exports.authorize = async (event, context) => {
   const decoded = jwt.verify(token, privateKey);
   const userId = decoded.userId;
 
-  //console.log('auth event: ', event);
+  // console.log('auth event: ', event);
 
   try {
     return {
@@ -27,7 +27,7 @@ module.exports.authorize = async (event, context) => {
             Resource: [
               'arn:aws:execute-api:us-east-2:random-account-id:random-api-id/dev/GET/me',
               'arn:aws:execute-api:us-east-2:random-account-id:random-api-id/dev/PUT/me/updateUser',
-              'arn:aws:execute-api:us-east-2:random-account-id:random-api-id/dev/POST/me/createUploadURL',
+              'arn:aws:execute-api:us-east-2:random-account-id:random-api-id/dev/POST/me/uploadObj',
             ],
           },
         ],
