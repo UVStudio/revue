@@ -2,7 +2,8 @@
  * Route: GET /getUser
  */
 const AWS = require('aws-sdk');
-AWS.config.update({ region: process.env.REGION });
+const secrets = require('../secrets.json');
+AWS.config.update({ region: secrets.REGION });
 
 const { getUserInfo } = require('../utils/getUserInfo');
 

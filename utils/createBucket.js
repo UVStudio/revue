@@ -1,14 +1,15 @@
 /**
  * Helper function
  */
+const secrets = require('../secrets.json');
 
 module.exports.createBucket = async (userName, userId) => {
   const { S3Client, CreateBucketCommand } = require('@aws-sdk/client-s3');
-  const s3Client = new S3Client({ region: process.env.REGION });
+  const s3Client = new S3Client({ region: secrets.REGION });
 
   const bucketParams = {
     Bucket: `revue-${userName.toLowerCase()}-${userId}`,
-    Key: `${process.env.S3_SECRET}`,
+    Key: `${secrets.S3_SECRET}`,
     Body: 'BODY',
   };
 

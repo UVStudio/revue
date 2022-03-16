@@ -24,9 +24,9 @@ provider:
   memorySize: 128
   timeout: 5
   environment:
-    JWT_SECRET: ${self:custom.secrets.JWT_SECRET}
-    S3_SECRET: ${self:custom.secrets.S3_SECRET}
-    REGION: ${self:custom.secrets.REGION}
+    # JWT_SECRET: ${self:custom.secrets.JWT_SECRET}
+    # S3_SECRET: ${self:custom.secrets.S3_SECRET}
+    # REGION: ${self:custom.secrets.REGION}
     # AWS_ID: ${self:custom.secrets.AWS_ID}
     USERS_TABLE: ${self:service}-v5
 

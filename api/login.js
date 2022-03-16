@@ -2,10 +2,11 @@
  * Route: POST /login
  */
 const AWS = require('aws-sdk');
-AWS.config.update({ region: process.env.REGION });
+const secrets = require('../secrets.json');
+AWS.config.update({ region: secrets.REGION });
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const privateKey = process.env.JWT_SECRET;
+const privateKey = secrets.JWT_SECRET;
 
 const dynamoDB = new AWS.DynamoDB.DocumentClient();
 const tableName = process.env.USERS_TABLE;

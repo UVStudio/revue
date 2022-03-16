@@ -2,10 +2,11 @@
  * Route: POST /presignedUrl
  */
 const AWS = require('aws-sdk');
-AWS.config.update({ region: process.env.REGION });
+const secrets = require('../secrets.json');
+AWS.config.update({ region: secrets.REGION });
 
 const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
-const s3Client = new S3Client({ region: process.env.REGION });
+const s3Client = new S3Client({ region: secrets.REGION });
 
 const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
 const { getUserInfo } = require('../utils/getUserInfo');
