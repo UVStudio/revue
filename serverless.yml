@@ -5,7 +5,7 @@ plugins:
   - serverless-offline
 
 custom:
-  secrets: ${file(secrets.json)}
+  # secrets: ${file(secrets.json)}
   serverless-offline:
     ignoreJWTSignature: true
 

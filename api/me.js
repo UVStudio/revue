@@ -11,7 +11,7 @@ module.exports.me = async (event, context) => {
     const userId = event.requestContext.authorizer.jwt.claims.userId;
     const user = await getUserInfo(userId);
 
-    console.log('secrets: ', process.env.REGION);
+    //console.log('secrets: ', process.env.REGION);
 
     return {
       statusCode: 200,
