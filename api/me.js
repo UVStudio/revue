@@ -2,7 +2,7 @@
  * Route: GET /me
  */
 const AWS = require('aws-sdk');
-AWS.config.update({ region: process.env.AWS_REGION });
+AWS.config.update({ region: process.env.REGION });
 
 const { getUserInfo } = require('../utils/getUserInfo');
 
@@ -10,6 +10,8 @@ module.exports.me = async (event, context) => {
   try {
     const userId = event.requestContext.authorizer.jwt.claims.userId;
     const user = await getUserInfo(userId);
+
+    console.log('secrets: ', process.env.REGION);
 
     return {
       statusCode: 200,

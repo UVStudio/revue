@@ -2,7 +2,7 @@
  * Route: POST /login
  */
 const AWS = require('aws-sdk');
-AWS.config.update({ region: process.env.AWS_REGION });
+AWS.config.update({ region: process.env.REGION });
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const privateKey = process.env.JWT_SECRET;

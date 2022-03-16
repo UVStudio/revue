@@ -10,8 +10,6 @@ const tableName = process.env.USERS_TABLE;
 module.exports.getUserByEmail = async (event, context) => {
   try {
     const userId = decodeURIComponent(event.pathParameters.userId);
-    //const data = JSON.parse(event.body);
-    //const email = data.userEmail;
     const params = {
       TableName: tableName,
       IndexName: 'userId-index',

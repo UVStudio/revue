@@ -4,7 +4,7 @@
 const AWS = require('aws-sdk');
 const jwt = require('jsonwebtoken');
 const privateKey = process.env.JWT_SECRET;
-AWS.config.update({ region: process.env.AWS_REGION });
+AWS.config.update({ region: process.env.REGION });
 
 module.exports.authorize = async (event, context) => {
   const token = event.headers.Authorization;
