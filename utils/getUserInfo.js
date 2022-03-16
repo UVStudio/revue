@@ -2,8 +2,7 @@
  * helper function
  */
 const AWS = require('aws-sdk');
-const secrets = require('../secrets.json');
-AWS.config.update({ region: secrets.REGION });
+AWS.config.update({ region: 'us-east-2' });
 
 const dynamoDB = new AWS.DynamoDB.DocumentClient();
 const tableName = process.env.USERS_TABLE;

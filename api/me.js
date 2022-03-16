@@ -2,8 +2,7 @@
  * Route: GET /me
  */
 const AWS = require('aws-sdk');
-const secrets = require('../secrets.json');
-AWS.config.update({ region: secrets.REGION });
+AWS.config.update({ region: 'us-east-2' });
 
 const { getUserInfo } = require('../utils/getUserInfo');
 

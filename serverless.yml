@@ -24,10 +24,9 @@ provider:
   memorySize: 128
   timeout: 5
   environment:
-    # JWT_SECRET: ${self:custom.secrets.JWT_SECRET}
-    # S3_SECRET: ${self:custom.secrets.S3_SECRET}
-    # REGION: ${self:custom.secrets.REGION}
-    # AWS_ID: ${self:custom.secrets.AWS_ID}
+    # JWT_SECRET: ${self:custom.process.env.JWT_SECRET}
+    JWT_SECRET: ${ssm:/revue-jwt-secret}
+    S3_SECRET: ${ssm:/revue-s3-secret}
     USERS_TABLE: ${self:service}-v5
 
   httpApi:

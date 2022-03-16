@@ -2,17 +2,13 @@
  * Route: POST /presignedUrl
  */
 const AWS = require('aws-sdk');
-const secrets = require('../secrets.json');
-AWS.config.update({ region: secrets.REGION });
+AWS.config.update({ region: 'us-east-2' });
 
 const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
-const s3Client = new S3Client({ region: secrets.REGION });
+const s3Client = new S3Client({ region: 'us-east-2' });
 
 const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
 const { getUserInfo } = require('../utils/getUserInfo');
-
-const dynamoDB = new AWS.DynamoDB.DocumentClient();
-const tableName = process.env.USERS_TABLE;
 
 module.exports.presignedUrl = async (event, context) => {
   const userId = event.requestContext.authorizer.jwt.claims.userId;
