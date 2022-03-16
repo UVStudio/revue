@@ -4,12 +4,11 @@
 
 module.exports.deleteBucket = async (userName, userId) => {
   const { S3Client, DeleteBucketCommand } = require('@aws-sdk/client-s3');
-  const secrets = require('../secrets.json');
-  const s3Client = new S3Client({ region: secrets.REGION });
+  const s3Client = new S3Client({ region: process.env.REGION });
 
   const bucketParams = {
     Bucket: `revue-${userName.toLowerCase()}-${userId}`,
-    Key: `${secrets.S3_SECRET}`,
+    Key: `${process.env.S3_SECRET}`,
     Body: 'BODY',
   };
 

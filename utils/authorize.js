@@ -3,17 +3,14 @@
  */
 const AWS = require('aws-sdk');
 const jwt = require('jsonwebtoken');
-const secrets = require('../secrets.json');
-const privateKey = secrets.JWT_SECRET;
-AWS.config.update({ region: secrets.REGION });
+const privateKey = process.env.JWT_SECRET;
+AWS.config.update({ region: process.env.REGION });
 
 module.exports.authorize = async (event, context) => {
   const token = event.headers.Authorization;
 
   const decoded = jwt.verify(token, privateKey);
   const userId = decoded.userId;
-
-  // console.log('auth event: ', event);
 
   try {
     return {

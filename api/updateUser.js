@@ -2,8 +2,8 @@
  * Route: Put /updateUser
  */
 const AWS = require('aws-sdk');
-const secrets = require('../secrets.json');
-AWS.config.update({ region: secrets.REGION });
+AWS.config.update({ region: process.env.REGION });
+const { getUserInfo } = require('../utils/getUserInfo');
 
 const dynamoDB = new AWS.DynamoDB.DocumentClient();
 const tableName = process.env.USERS_TABLE;
@@ -35,18 +35,20 @@ module.exports.updateUser = async (event, context) => {
 
     const body = JSON.parse(event.body);
 
-    // await dynamoDB
-    //   .put({
-    //     TableName: tableName,
-    //     Item: body,
-    //   })
-    //   .promise();
+    console.log('body:', body);
+
+    await dynamoDB
+      .put({
+        TableName: tableName,
+        Item: body,
+      })
+      .promise();
 
     return {
       statusCode: 200,
       body: JSON.stringify({
         message: `User id: ${userId} is being updated.`,
-        user: body,
+        body,
       }),
     };
   } catch (err) {

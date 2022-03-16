@@ -5,7 +5,7 @@ plugins:
   - serverless-offline
 
 custom:
-  # secrets: ${file(secrets.json)}
+  secrets: ${file(secrets.json)}
   serverless-offline:
     ignoreJWTSignature: true
 
@@ -24,9 +24,11 @@ provider:
   memorySize: 128
   timeout: 5
   environment:
-    # JWT_SECRET: ${self:custom.secrets.JWT_SECRET}
+    JWT_SECRET: ${self:custom.secrets.JWT_SECRET}
+    S3_SECRET: ${self:custom.secrets.S3_SECRET}
     # AWS_ID: ${self:custom.secrets.AWS_ID}
     USERS_TABLE: ${self:service}-v5
+
   httpApi:
     authorizers:
       verifyToken:

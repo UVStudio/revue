@@ -3,11 +3,10 @@
  */
 const { v4: uuidv4 } = require('uuid');
 const AWS = require('aws-sdk');
-const secrets = require('../secrets.json');
-AWS.config.update({ region: secrets.REGION });
+AWS.config.update({ region: process.env.REGION });
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const privateKey = secrets.JWT_SECRET;
+const privateKey = process.env.JWT_SECRET;
 const timestamp = Date.now();
 const { createBucket } = require('../utils/createBucket');
 
