@@ -4,7 +4,7 @@
 
 module.exports.deleteBucket = async (userName, userId) => {
   const { S3Client, DeleteBucketCommand } = require('@aws-sdk/client-s3');
-  const s3Client = new S3Client({ region: process.env.REGION });
+  const s3Client = new S3Client({ region: process.env.AWS_REGION });
 
   const bucketParams = {
     Bucket: `revue-${userName.toLowerCase()}-${userId}`,

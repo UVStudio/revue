@@ -3,7 +3,7 @@
  */
 const { v4: uuidv4 } = require('uuid');
 const AWS = require('aws-sdk');
-AWS.config.update({ region: process.env.REGION });
+AWS.config.update({ region: process.env.AWS_REGION });
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const privateKey = process.env.JWT_SECRET;

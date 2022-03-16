@@ -2,7 +2,7 @@
  * Route: DELETE /deleteUser
  */
 const AWS = require('aws-sdk');
-AWS.config.update({ region: process.env.REGION });
+AWS.config.update({ region: process.env.AWS_REGION });
 
 const dynamoDB = new AWS.DynamoDB.DocumentClient();
 const tableName = process.env.USERS_TABLE;

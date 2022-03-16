@@ -4,7 +4,7 @@
 
 module.exports.createBucket = async (userName, userId) => {
   const { S3Client, CreateBucketCommand } = require('@aws-sdk/client-s3');
-  const s3Client = new S3Client({ region: process.env.REGION });
+  const s3Client = new S3Client({ region: process.env.AWS_REGION });
 
   const bucketParams = {
     Bucket: `revue-${userName.toLowerCase()}-${userId}`,
