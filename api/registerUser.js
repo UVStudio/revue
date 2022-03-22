@@ -53,19 +53,24 @@ module.exports.registerUser = async (event, context) => {
       .promise();
 
     const token = jwt.sign(
-      { exp: Math.floor(Date.now() / 1000) + 60 * 3600 },
+      {
+        exp: Math.floor(Date.now() / 1000) + 60 * 3600,
+        userId: user.userId,
+        userEmail: user.userEmail,
+        timestamp: user.timestamp,
+      },
       privateKey,
       {
         algorithm: 'HS256',
       }
     );
 
-    await createBucket(body.name, body.userId);
+    await createBucket(body.userName, body.userId);
 
     return {
       statusCode: 200,
       body: JSON.stringify({
-        message: `Added ${body.name} to ${process.env.USERS_TABLE}`,
+        message: `Added ${body.userName} to ${process.env.USERS_TABLE}`,
         body,
         passwordHash,
         token,

@@ -49,6 +49,8 @@ resources:
             AttributeType: S
           - AttributeName: userEmail
             AttributeType: S
+          - AttributeName: userName
+            AttributeType: S
           - AttributeName: timestamp
             AttributeType: N
           - AttributeName: userType

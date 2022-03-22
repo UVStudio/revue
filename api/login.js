@@ -49,7 +49,12 @@ module.exports.login = async (event, context) => {
     }
 
     const token = jwt.sign(
-      { exp: Math.floor(Date.now() / 1000) + 60 * 3600, userId: user.userId },
+      {
+        exp: Math.floor(Date.now() / 1000) + 60 * 3600,
+        userId: user.userId,
+        userEmail: user.userEmail,
+        timestamp: user.timestamp,
+      },
       privateKey,
       {
         algorithm: 'HS256',

@@ -10,7 +10,7 @@ module.exports.authorize = async (event, context) => {
   const token = event.headers.Authorization;
 
   const decoded = jwt.verify(token, privateKey);
-  const userId = decoded.userId;
+  const { userId, userEmail, timestamp } = decoded;
 
   try {
     return {
@@ -32,7 +32,7 @@ module.exports.authorize = async (event, context) => {
       context: {
         org: 'revue',
         role: 'user',
-        user: userId,
+        user: { userId, userEmail, timestamp },
       },
     };
   } catch (err) {

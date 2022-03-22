@@ -10,37 +10,23 @@ const tableName = process.env.USERS_TABLE;
 
 module.exports.updateUser = async (event, context) => {
   try {
-    const userId = event.requestContext.authorizer.jwt.claims.userId;
-
-    const params = {
-      TableName: tableName,
-      IndexName: 'userId-index',
-      KeyConditionExpression: 'userId = :user_id',
-      ExpressionAttributeValues: {
-        ':user_id': userId,
-      },
-      Limit: 1,
-    };
-
-    const data = await dynamoDB.query(params).promise();
-
-    if (data.Count === 0) {
-      return {
-        statusCode: 400,
-        body: JSON.stringify({
-          message: `${userId} does not exist on the system.`,
-        }),
-      };
-    }
-
+    const { userId, userEmail, timestamp } =
+      event.requestContext.authorizer.user;
     const body = JSON.parse(event.body);
 
-    console.log('body:', body);
-
     await dynamoDB
-      .put({
+      .update({
         TableName: tableName,
-        Item: body,
+        Key: {
+          userEmail,
+          timestamp,
+        },
+        UpdateExpression: 'set company = :company, userName = :userName',
+
+        ExpressionAttributeValues: {
+          ':company': body.company,
+          ':userName': body.userName,
+        },
       })
       .promise();
 
@@ -62,3 +48,24 @@ module.exports.updateUser = async (event, context) => {
     };
   }
 };
+
+// const params = {
+//   TableName: tableName,
+//   IndexName: 'userId-index',
+//   KeyConditionExpression: 'userId = :user_id',
+//   ExpressionAttributeValues: {
+//     ':user_id': userId,
+//   },
+//   Limit: 1,
+// };
+
+// const data = await dynamoDB.query(params).promise();
+
+// if (data.Count === 0) {
+//   return {
+//     statusCode: 400,
+//     body: JSON.stringify({
+//       message: `${userId} does not exist on the system.`,
+//     }),
+//   };
+// }

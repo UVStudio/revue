@@ -15,6 +15,7 @@ module.exports.me = async (event, context) => {
       statusCode: 200,
       body: JSON.stringify({
         user,
+        event,
       }),
     };
   } catch (err) {
